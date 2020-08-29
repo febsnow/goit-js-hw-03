@@ -5,14 +5,19 @@
 const findBestEmployee = function (employees) {
   'use strict';
   // Write code under this line
-  let theBestEmployee = employees.value;
-  console.log(Object.keys(employees));
-  for (const employee in employees) {
-    if (theBestEmployee < employee) {
-      theBestEmployee = employee;
+  let result = '';
+  let maxValue = 0;
+  const keys = Object.keys(employees);
+
+  for (const key of keys) {
+    // console.log('Параметр: ', key);
+    // console.log('Значение: ', employees[key]);
+    if (employees[key] > maxValue) {
+      maxValue = employees[key];
+      result = key;
     }
   }
-  return theBestEmployee;
+  return result;
 };
 
 // Объекты и ожидаемый результат
@@ -30,7 +35,7 @@ const supports = {
   mango: 17,
   ajax: 4,
 };
-//console.log(findBestEmployee(supports));
+console.log(findBestEmployee(supports));
 // 'mango'
 
 const sellers = {
@@ -39,5 +44,5 @@ const sellers = {
   kiwi: 19,
   chelsy: 38,
 };
-//console.log(findBestEmployee(sellers));
+// console.log(findBestEmployee(sellers));
 // 'lux'
