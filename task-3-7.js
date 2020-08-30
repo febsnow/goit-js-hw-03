@@ -24,12 +24,13 @@ const account = {
    * Принимает сумму и тип транзакции.
    */
   createTransaction(amount, type) {
+    // console.log('выполняется createTransaction');
     let transaction = {
       amount: amount,
       type: type,
-      id: Math.random(0 - 1000),
+      id: Math.floor(Math.random() * (Math.floor(1000) - Math.ceil(1)) + Math.ceil(1)),
     };
-    console.log('выполняется createTransaction');
+    return transaction;
   },
 
   /*
@@ -39,10 +40,11 @@ const account = {
    * после чего добавляет его в историю транзакций
    */
   deposit(amount) {
-    this.createTransaction(amount);
-    this.transactions.push();
+    console.log('Происходит пополнение баланса...');
+
+    this.transactions.push(this.createTransaction(amount, Transaction.DEPOSIT));
     this.balance += amount;
-    console.log('выполняется депозит');
+    return `Баланс пополнен на ${amount}$$. Сумма на счету ${this.balance}$$`;
   },
 
   /*
@@ -56,43 +58,54 @@ const account = {
    */
   withdraw(amount) {
     console.log('Выполняется withdraw');
-    this.createTransaction();
-    this.transactions.push();
 
-    let message = 'Снятие успешное';
     if (amount > this.balance) {
-      message = 'Недостаточно средств';
-      return message;
+      return `Невозможно снять ${amount}$$. Недостаточно средств. Сумма на счету ${this.balance}$$`;
     }
 
+    this.transactions.push(this.createTransaction(amount, Transaction.WITHDRAW));
+
     this.balance -= amount;
-    return message;
+
+    return `Успешное снятие ${amount}$$. Сумма на счету ${this.balance}$$`;
   },
 
   /*
    * Метод возвращает текущий баланс
    */
   getBalance() {
-    return this.balance;
+    return `Сумма на счету ${this.balance}$$`;
   },
 
   /*
    * Метод ищет и возвращает объект транзации по id
    */
-  getTransactionDetails(id) {},
+  getTransactionDetails(id) {
+    for (const item of this.transactions) {
+      if (item.id == id) {
+        console.log(`Выполняется поиск транзакции ${id}...`);
+        return item;
+      }
+    }
+  },
 
   /*
    * Метод возвращает количество средств
    * определенного типа транзакции из всей истории транзакций
    */
   getTransactionTotal(type) {
+    let sum = 0;
+    let message = `Транзакции ${type} не найдены`;
+    let transactionToFind = '';
+
     for (const item of this.transactions) {
+      if (item['type'] == type) {
+        sum += item['amount'];
+        transactionToFind = item;
+        message = `Общая сумма транзакций: ${sum}$$`;
+        console.log('Найдена транзакция: ', transactionToFind);
+      }
     }
+    return message;
   },
 };
-console.log(account.deposit(500));
-// console.log(account.withdraw(100));
-// console.log(account.createTransaction());
-// console.log(account.transactions);
-// console.log(account.balance);
-console.log(account.getBalance());
